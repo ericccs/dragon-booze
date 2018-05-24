@@ -32,8 +32,8 @@ setPassiveTouchGestures(true);
 setRootPath(MyAppGlobals.rootPath);
 
 class MyApp extends PolymerElement {
-  static get template() {
-    return html`
+    static get template() {
+        return html`
       <style>
         :host {
           --app-primary-color: #4285f4;
@@ -84,9 +84,8 @@ class MyApp extends PolymerElement {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="view1" href="[[rootPath]]view1">View One</a>
-            <a name="view2" href="[[rootPath]]view2">View Two</a>
-            <a name="view3" href="[[rootPath]]view3">View Three</a>
+            <a name="booze-collector-view" href="[[rootPath]]booze-collector-view">Booze Collector</a>
+            <a name="booze-order-summary-view" href="[[rootPath]]booze-order-summary-view">Booze Order Summary</a>
           </iron-selector>
         </app-drawer>
 
@@ -96,78 +95,74 @@ class MyApp extends PolymerElement {
           <app-header slot="header" condenses="" reveals="" effects="waterfall">
             <app-toolbar>
               <paper-icon-button icon="my-icons:menu" drawer-toggle=""></paper-icon-button>
-              <div main-title="">My App</div>
+              <div main-title="">Dragon Booze</div>
             </app-toolbar>
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <my-view1 name="view1"></my-view1>
-            <my-view2 name="view2"></my-view2>
-            <my-view3 name="view3"></my-view3>
+            <booze-collector-view name="booze-collector-view"></booze-collector-view>
+            <booze-order-summary-view name="booze-order-summary-view"></booze-order-summary-view>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
       </app-drawer-layout>
     `;
-  }
-
-  static get properties() {
-    return {
-      page: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_pageChanged'
-      },
-      routeData: Object,
-      subroute: Object
-    };
-  }
-
-  static get observers() {
-    return [
-      '_routePageChanged(routeData.page)'
-    ];
-  }
-
-  _routePageChanged(page) {
-     // Show the corresponding page according to the route.
-     //
-     // If no page was found in the route data, page will be an empty string.
-     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
-    if (!page) {
-      this.page = 'view1';
-    } else if (['view1', 'view2', 'view3'].indexOf(page) !== -1) {
-      this.page = page;
-    } else {
-      this.page = 'view404';
     }
 
-    // Close a non-persistent drawer when the page & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
+    static get properties() {
+        return {
+            page: {
+                type: String,
+                reflectToAttribute: true,
+                observer: '_pageChanged'
+            },
+            routeData: Object,
+            subroute: Object
+        };
     }
-  }
 
-  _pageChanged(page) {
-    // Import the page component on demand.
-    //
-    // Note: `polymer build` doesn't like string concatenation in the import
-    // statement, so break it up.
-    switch (page) {
-      case 'view1':
-        import('./my-view1.js');
-        break;
-      case 'view2':
-        import('./my-view2.js');
-        break;
-      case 'view3':
-        import('./my-view3.js');
-        break;
-      case 'view404':
-        import('./my-view404.js');
-        break;
+    static get observers() {
+        return [
+            '_routePageChanged(routeData.page)'
+        ];
     }
-  }
+
+    _routePageChanged(page) {
+        // Show the corresponding page according to the route.
+        //
+        // If no page was found in the route data, page will be an empty string.
+        // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
+        if (!page) {
+            this.page = 'booze-collector-view';
+        } else if (['booze-collector-view', 'booze-order-summary-view'].indexOf(page) !== -1) {
+            this.page = page;
+        } else {
+            this.page = 'view404';
+        }
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+            this.$.drawer.close();
+        }
+    }
+
+    _pageChanged(page) {
+        // Import the page component on demand.
+        //
+        // Note: `polymer build` doesn't like string concatenation in the import
+        // statement, so break it up.
+        switch (page) {
+            case 'booze-collector-view':
+                import('./booze-collector-view.js');
+                break;
+            case 'booze-order-summary-view':
+                import('./booze-order-summary-view.js');
+                break;
+            case 'view404':
+                import('./my-view404.js');
+                break;
+        }
+    }
 }
 
 window.customElements.define('my-app', MyApp);
