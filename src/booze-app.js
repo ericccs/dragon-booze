@@ -1,13 +1,3 @@
-/**
- * @license
- * Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
- * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
- * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
- * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
- * Code distributed by Google as part of the polymer project is also
- * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
- */
-
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import { setPassiveTouchGestures, setRootPath } from '@polymer/polymer/lib/utils/settings.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
@@ -84,8 +74,9 @@ class MyApp extends PolymerElement {
         <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
           <app-toolbar>Menu</app-toolbar>
           <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-            <a name="booze-collector-view" href="[[rootPath]]booze-collector-view">Booze Collector</a>
-            <a name="booze-order-summary-view" href="[[rootPath]]booze-order-summary-view">Booze Order Summary</a>
+            <a name="booze-collector" href="[[rootPath]]booze-collector">Booze Collector</a>
+            <a name="booze-order-summary" href="[[rootPath]]booze-order-summary">Booze Order Summary</a>
+            <a name="report-panel" href="[[rootPath]]report-panel">Report Panel</a>
           </iron-selector>
         </app-drawer>
 
@@ -100,8 +91,9 @@ class MyApp extends PolymerElement {
           </app-header>
 
           <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
-            <booze-collector-view name="booze-collector-view"></booze-collector-view>
-            <booze-order-summary-view name="booze-order-summary-view"></booze-order-summary-view>
+            <booze-collector name="booze-collector"></booze-collector>
+            <booze-order-summary name="booze-order-summary"></booze-order-summary>
+            <report-panel name="report-panel"></report-panel>
             <my-view404 name="view404"></my-view404>
           </iron-pages>
         </app-header-layout>
@@ -133,8 +125,8 @@ class MyApp extends PolymerElement {
         // If no page was found in the route data, page will be an empty string.
         // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
         if (!page) {
-            this.page = 'booze-collector-view';
-        } else if (['booze-collector-view', 'booze-order-summary-view'].indexOf(page) !== -1) {
+            this.page = 'report-panel';
+        } else if (['booze-collector', 'booze-order-summary', "report-panel"].indexOf(page) !== -1) {
             this.page = page;
         } else {
             this.page = 'view404';
@@ -148,15 +140,17 @@ class MyApp extends PolymerElement {
 
     _pageChanged(page) {
         // Import the page component on demand.
-        //
         // Note: `polymer build` doesn't like string concatenation in the import
         // statement, so break it up.
         switch (page) {
-            case 'booze-collector-view':
-                import('./booze-collector-view.js');
+            case 'booze-collector':
+                import('./booze-collector.js');
                 break;
-            case 'booze-order-summary-view':
-                import('./booze-order-summary-view.js');
+            case 'booze-order-summary':
+                import('./booze-order-summary.js');
+                break;
+            case 'report-panel':
+                import('./report-panel.js');
                 break;
             case 'view404':
                 import('./my-view404.js');
@@ -165,4 +159,4 @@ class MyApp extends PolymerElement {
     }
 }
 
-window.customElements.define('my-app', MyApp);
+window.customElements.define('booze-app', MyApp);
